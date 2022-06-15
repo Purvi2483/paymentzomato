@@ -21,7 +21,7 @@ app.post("/payment", [parseUrl, parseJson], (req, res) => {
   console.log(req.body)
   var paymentDetails = {
     orderID: req.body.id,
-    amount: req.body.amount,
+    amount: req.body.cost,
     customerId: req.body.name,
     customerEmail: req.body.email,
     customerPhone: req.body.phone
@@ -39,7 +39,7 @@ if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.custo
     params['CUST_ID'] = paymentDetails.customerId;
     params['TXN_AMOUNT'] = paymentDetails.amount;
     // change port number
-    params['CALLBACK_URL'] = 'http://localhost:8000/callback';
+    params['CALLBACK_URL'] = 'https://developerpayment.herokuapp.com/callback';
     params['EMAIL'] = paymentDetails.customerEmail;
     params['MOBILE_NO'] = paymentDetails.customerPhone;
 
@@ -120,7 +120,7 @@ app.post("/callback", (req, res) => {
            var _results = JSON.parse(response);
              if(_results.STATUS == 'TXN_SUCCESS') {
                 console.log("^^^^^^^",_results)
-                res.redirect(`http://localhost:3003/viewOrder?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}`)
+                res.redirect(`http://localhost:3000/viewOrder?status=${_results.STATUS}&ORDERID=${_results.ORDERID}&date=${_results.TXNDATE}&bank=${_results.BANKNAME}`)
              }else {
                  res.send('payment failed')
              }
